@@ -80,6 +80,23 @@ app.get("/articles", function (req, res) {
     })
 });
 
+// Route for grabbing a specific Article by id, populate it with it's note
+app.get("/articles/:id", function (req, res) {
+  // TODO
+  // ====
+  // Find one article using the req.params.id,
+  // and run the populate method with "note",
+  // then responds with the article with the note included
+  db.Article.findOne({_id: req.params.id })
+  .populate("note")
+  .then(function(dbArticle){
+    res.json(dbArticle);
+  })
+  .catch(function(err){
+    res.json(err);
+  });
+});
+
 
 
 // Start the server
