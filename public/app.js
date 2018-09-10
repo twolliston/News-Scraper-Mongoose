@@ -4,10 +4,12 @@ $.getJSON("/articles", function (data) {
   for (var i = 0; i < data.length; i++) {
     // Display the article information on the page
     $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
-    // A link to submit a new note, with the id of the article saved to it
+    // A link to delete a note, with the id of the article saved to it
     $("#articles").append("<a href='/delete/" + data[i]._id + " 'data-id='" + data[i]._id + "' id='deletearticle'>Delete Article</a>");
     // A link to submit a new note, with the id of the article saved to it
-    $("#articles").append("<a href='/save/" + data[i]._id + " 'data-id='" + data[i]._id + "' id='savearticle'>Save Article</a>");
+    if (!data[i].saved) {
+      $("#articles").append("<a href='/save/" + data[i]._id + " 'data-id='" + data[i]._id + "' id='savearticle'>Save Article</a>");
+    }
   }
 });
 

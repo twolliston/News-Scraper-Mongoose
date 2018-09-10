@@ -119,7 +119,12 @@ app.post("/articles/:id", function (req, res) {
 app.get('/save/:id', function (req, res) {
   db.Article.findOneAndUpdate({ _id: req.params.id }, { saved: true }, { new: true }, function () {
     console.log("save ok");
-  });
+  })
+    .then(function (dbArticle) {
+      res.render("index.html")
+    }).catch(function (err) {
+      res.json(err);
+    });
 });
 
 // route for delete of a single article
@@ -127,6 +132,61 @@ app.get('/delete/:id', function (req, res) {
   db.Article.remove({ _id: req.params.id })
     .then(function (dbArticle) {
       res.render("index.html")
+    }).catch(function (err) {
+      res.json(err);
+    });
+})
+
+// NOT WORKING DELETE PARENT AND CHILDREN
+// https://stackoverflow.com/questions/14348516/cascade-style-delete-in-mongoose
+// app.get('/delete/:id', function (req, res) {
+//   db.Articles.pre('remove', function (next) {
+//     // 'this' is the client being removed. Provide callbacks here if you want
+//     // to be notified of the calls' result.
+//     db.Notes.remove({ _id: req.params.id }).exec();
+//     next();
+//   })
+//     .then(function (dbArticle) {
+//       res.render("index.html")
+//     })
+// })
+
+
+
+
+
+// Route for getting all Saved Articles from the db
+app.get('/api/saved', function (req, res) {
+  db.Article.find({
+    saved: true
+  }).then(function (dbArticle) {
+    res.json(dbArticle);
+  }).catch(function (err) {
+    res.json(err);
+  });
+});
+
+app.get("/saved/:id", function (req, res) {
+  // Find one article using the req.params.id,
+  // and run the populate method with "note",
+  // then responds with the article with the note included
+  db.Article.findOne({ _id: req.params.id })
+    .populate("note")
+    .then(function (dbArticle) {
+      res.json(dbArticle);
+    })
+    .catch(function (err) {
+      res.json(err);
+    });
+});
+
+
+// Route for grabbing a specific Saved Article by id, populate it with it's note
+app.get('/api/saved/:id', function (req, res) {
+  db.Article.findOne({ _id: req.params.id })
+    .then(function (dbArticle) {
+      console.log('success');
+      return;
     }).catch(function (err) {
       res.json(err);
     });
