@@ -130,6 +130,9 @@ app.get('/save/:id', function (req, res) {
 // route for delete of a single article
 app.get('/delete/:id', function (req, res) {
   db.Article.remove({ _id: req.params.id })
+    .then( function() {
+      console.log("Delete complete");
+    })
     .then(function (dbArticle) {
       res.render("index.html")
     }).catch(function (err) {
@@ -137,22 +140,15 @@ app.get('/delete/:id', function (req, res) {
     });
 })
 
-// NOT WORKING DELETE PARENT AND CHILDREN
-// https://stackoverflow.com/questions/14348516/cascade-style-delete-in-mongoose
-// app.get('/delete/:id', function (req, res) {
-//   db.Articles.pre('remove', function (next) {
-//     // 'this' is the client being removed. Provide callbacks here if you want
-//     // to be notified of the calls' result.
-//     db.Notes.remove({ _id: req.params.id }).exec();
-//     next();
-//   })
-//     .then(function (dbArticle) {
-//       res.render("index.html")
-//     })
-// })
-
-
-
+// route for delete of a single note
+app.get('/deletenote/:id', function (req, res) {
+  db.Note.deleteOne({ _id: req.params.id })
+    .then(function (dbNote) {
+      res.render("index.html")
+    }).catch(function (err) {
+      res.json(err);
+    });
+})
 
 
 // Route for getting all Saved Articles from the db
