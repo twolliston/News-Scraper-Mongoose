@@ -28,11 +28,10 @@ app.use(express.static("public"));
 
 
 // Database configuration with Mongoose
-// var databaseUri = "mongodb://localhost/newsdb";
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/newsdb";
 
 // Connect to the Mongo DB
-mongoose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI, {userNewUrlParser: true});
 
 
 // Routes
