@@ -12,7 +12,7 @@ var cheerio = require("cheerio");
 // Require all models
 var db = require("./models");
 
-var PORT = 3000;
+var PORT = process.env.port || 3000;
 
 // Initialize Express
 var app = express();
@@ -26,8 +26,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Use express.static to serve the public folder as a static directory
 app.use(express.static("public"));
 
+
+// Database configuration with Mongoose
+// var databaseUri = "mongodb://localhost/newsdb";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/newsdb";
+
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/newsdb", { useNewUrlParser: true });
+mongoose.connect(MONGODB_URI);
+
 
 // Routes
 
@@ -130,7 +136,7 @@ app.get('/save/:id', function (req, res) {
 // route for delete of a single article
 app.get('/delete/:id', function (req, res) {
   db.Article.remove({ _id: req.params.id })
-    .then( function() {
+    .then(function () {
       console.log("Delete complete");
     })
     .then(function (dbArticle) {
