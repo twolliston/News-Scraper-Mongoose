@@ -193,6 +193,22 @@ app.get('/api/saved/:id', function (req, res) {
     });
 })
 
+
+
+// route for delete of a all article
+app.get('/clearall', function (req, res) {
+  db.Article.remove({})
+    .then(function () {
+      console.log("Delete al complete");
+    })
+    .then(function (dbArticle) {
+      res.render("index.html")
+    }).catch(function (err) {
+      res.json(err);
+    });
+})
+
+
 // Start the server
 app.listen(PORT, function () {
   console.log("App running on port " + PORT + "!");
